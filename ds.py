@@ -29,5 +29,5 @@ class Fully_Persistent_Retroactive_DS:
         pass
 
     # for partial ds time will be ignored
-    def Query(self, time, *args): 
+    def Query(self, version, time, *args): 
         pass
