@@ -24,14 +24,14 @@ class Trivial_DS(DS):
         idx = args[0]
         return self.A[idx]
 
-
-trivial_DS = Trivial_DS(5)
-trivial_DS.Insert(0.0, "incr", 1, 2)
-print trivial_DS.Query(5.0, 1)
-print trivial_DS.Query(5.0, 0)
-trivial_DS.Insert(0.3, "incr", 1, 3)
-print trivial_DS.Query(5.0, 1)
-print trivial_DS.Query(5.0, 0)
-trivial_DS.Delete(0.0)
-print trivial_DS.Query(5.0, 1)
-print trivial_DS.Query(5.0, 0)
+def shit_test():
+    trivial_DS = Trivial_DS(5)
+    trivial_DS.Insert(0.0, "incr", 1, 2)
+    print trivial_DS.Query(5.0, 1)
+    print trivial_DS.Query(5.0, 0)
+    trivial_DS.Insert(0.3, "incr", 1, 3)
+    print trivial_DS.Query(5.0, 1)
+    print trivial_DS.Query(5.0, 0)
+    trivial_DS.Delete(0.0)
+    print trivial_DS.Query(5.0, 1)
+    print trivial_DS.Query(5.0, 0)

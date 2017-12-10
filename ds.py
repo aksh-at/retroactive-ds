@@ -1,24 +1,31 @@
-class DS: # partial
+class Retroactive_DS: 
     """
-    Template for data structures.
+    Template for retroactive data structures.      
     """
-
-    def __init__(self):
-        self.ops = {}
-
-    # add_op and remove_op can be replaced by an OFM structure later instead of our hash of fraction times
-    def add_op(self, time, op):
-        self.ops[time] = op
-
-    def pop_op(self, time):
-        store = self.ops[time]
-        del self.ops[time]
-        return store
-
     def Insert(self, time, op_name, *args):
         pass
 
     def Delete(self, time):
+        pass
+
+    # for partial ds time will be ignored
+    def Query(self, time, *args): 
+        pass
+
+#TODO: make inheritance relation from the above class to this. 
+# Maybe subsume version in *args for insert and delete?
+class Fully_Persistent_Retroactive_DS: 
+    """
+    Template for fully persistent, partially retro data structures.  
+    Assume initial version is 0
+    """
+
+    # returns new version_no
+    def Persistent_Insert(self, version, time, op_name, *args):
+        pass
+
+    # returns new version_no
+    def Persistent_Delete(self, version, time):
         pass
 
     # for partial ds time will be ignored
