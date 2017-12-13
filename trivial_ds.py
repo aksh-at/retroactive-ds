@@ -1,37 +1,49 @@
-from ds import DS
+from ds import *
+from bintrees import AVLTree
 
-class Trivial_DS(DS):
+# This is a really dumb persistent DS in which we don't even keep the version tree, since there is only one value
+class Trivial_DS(Fully_Persistent_Retroactive_DS):
+    def __init__(self):
+        self.last_version = 0
+        self.version_to_val = {}
+        self.version_to_val[0] = 0
+        self.ops = {}
 
-    def __init__(self, size):
-        DS.__init__(self)
-        self.A = [0] * size
+    def incr(self, version, val):
+        self.last_version += 1
+        self.version_to_val[self.last_version] = self.version_to_val[version] + val
+        return self.last_version
 
-    def incr(self, idx, val):
-        self.A[idx] += val
+    def undo_incr(self, version, val):
+        self.last_version += 1
+        self.version_to_val[self.last_version] = self.version_to_val[version] - val
+        return self.last_version
 
-    def undo_incr(self, idx, val):
-        self.A[idx] -= val
+    def Persistent_Insert(self, version, time, op_name, *args):
+        self.ops[time] = (op_name, args)
+        return getattr(self, op_name)(version, *args)
 
-    def Insert(self, time, op_name, *args):
-        self.add_op(time, (op_name, args))
-        getattr(self, op_name)(*args)
+    def Persistent_Delete(self, version, time):
+        (op_name, args) = self.ops[time]
+        return getattr(self, "undo_"+op_name)(version, *args)
 
-    def Delete(self, time):
-        (op_name, args) = self.pop_op(time)
-        getattr(self, "undo_"+op_name)(*args)
-
-    def Query(self, time, *args):
-        idx = args[0]
-        return self.A[idx]
+    #ignore time since partially retroactive
+    def Query(self, version, time, *args):
+        return self.version_to_val[version]
 
 def shit_test():
-    trivial_DS = Trivial_DS(5)
-    trivial_DS.Insert(0.0, "incr", 1, 2)
-    print trivial_DS.Query(5.0, 1)
-    print trivial_DS.Query(5.0, 0)
-    trivial_DS.Insert(0.3, "incr", 1, 3)
-    print trivial_DS.Query(5.0, 1)
-    print trivial_DS.Query(5.0, 0)
-    trivial_DS.Delete(0.0)
-    print trivial_DS.Query(5.0, 1)
-    print trivial_DS.Query(5.0, 0)
+    trivial_DS = Trivial_DS()
+    v0 = 0
+
+    v1 = trivial_DS.Persistent_Insert(v0, 1, 'incr', 2)
+    v2 = trivial_DS.Persistent_Insert(v0, 1.5, 'incr', 3)
+    print trivial_DS.Query(v1, 100)
+    print trivial_DS.Query(v2, 100)
+
+    v3 = trivial_DS.Persistent_Insert(v1, 2, 'incr', 5)
+    print trivial_DS.Query(v3, 100)
+
+    v4 = trivial_DS.Persistent_Delete(v3, 1)
+    print trivial_DS.Query(v4, 100)
+
+shit_test()
