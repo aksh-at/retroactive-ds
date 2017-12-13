@@ -9,6 +9,11 @@ class Trivial_DS(Fully_Persistent_Retroactive_DS):
         self.version_to_val[0] = 0
         self.ops = {}
 
+    def init(self, version, val):
+        self.last_version += 1
+        self.version_to_val[self.last_version] = self.version_to_val[version] + val
+        return self.last_version
+
     def incr(self, version, val):
         self.last_version += 1
         self.version_to_val[self.last_version] = self.version_to_val[version] + val
@@ -45,5 +50,3 @@ def shit_test():
 
     v4 = trivial_DS.Persistent_Delete(v3, 1)
     print trivial_DS.Query(v4, 100)
-
-shit_test()
